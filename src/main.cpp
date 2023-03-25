@@ -11,7 +11,7 @@
 
 #include <Arduino.h>
 
-#include <Servo.h>
+#include <Servo.h>          //  For library prototypes and definitions
 
 /*
  *  Constants defined in platformio.ini
@@ -19,34 +19,40 @@
  *      SERIAL_BAUD Serial port Baud rate
  */
 
-#define END_LIST    -1      //  Only to terminate array by value
+#define END_LIST    -1      //  For end of table
+
+//    Positioning table
+static const int grads[] = {0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165, 180, END_LIST};
 
 Servo servo;                //    A new object of type Servo
+
+static void
+go_servo(int pos)
+{
+    servo.write(pos);
+    delay(1500);
+    Serial.printf("grads = %3d, real = %3d\n", pos, servo.read());
+}
 
 void
 setup(void)
 {
     Serial.begin(SERIAL_BAUD);
     servo.attach(MY_SERVO); //    Attach GPIO pin to object Servo
-    Serial.printf("\n\n07-servo\n");
+    Serial.printf("\n\n05-servo\n");
+    servo.write(0);
     delay(2000);
 }
-
-//    Positioning table
-
-static const int grads[] = {0, 45, 90, 135, 180, 135, 90,45, END_LIST};
 
 void
 loop(void)
 {
-    int i;
+    int i, c, last,t;
 
-    for (i = 0; grads[i] >= 0; ++i)
-    {
-        Serial.printf("grads = %3d\n", grads[i] );
-        servo.write(grads[i]);
-        delay(1000);
-    }
+    for (i = 0; (c = grads[i]) >= 0; ++i)
+        go_servo(c);
+    for(i-=2; (c = grads[i]) > 0; --i)
+        go_servo(c);
 }
 
 

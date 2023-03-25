@@ -2,7 +2,7 @@
 
 #   Project 05-servo
 
-    IntroComp - Austral 2022 - EAM
+    Electronica Digital - Austral 2023 - EAM
     
 ##  Shows how to position a servo using angles in a table
 
